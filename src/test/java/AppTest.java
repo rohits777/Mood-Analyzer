@@ -1,38 +1,67 @@
 package com.bridgelabz;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest
-        extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
+public class MoodAnalyzerTest {
+
+    @Test
+    public void givenMessage_WhenSad_ShouldReturn_Sad() throws MoodAnalysisException {
+        MoodAnalyzer moodAnalyzer = new MoodAnalyzer("I am in Sad Mood");
+        String mood;
+        mood = moodAnalyzer.analyseMood();
+        Assert.assertEquals("SAD", mood);
     }
 
-    /**
-     * @return the suite of tests being tested
+    /*
+     *This Test Case Excepts
+     * Happy Mood
      */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
+    @Test
+    public void givenMessage_WhenNotSad_ShouldReturn_Happy() {
+        MoodAnalyzer moodAnalyzer = new MoodAnalyzer("I am in any Mood");
+        String mood;
+        try {
+            mood = moodAnalyzer.analyseMood();
+            Assert.assertEquals("HAPPY", mood);
+        }
+        catch (MoodAnalysisException e){
+            System.out.println(e);
+        }
+
     }
 
-    /**
-     * Rigourous Test :-)
+    /*
+     *This Test Case Will Check For
+     * Null Pointer Exception
      */
-    public void testApp()
-    {
-        assertTrue( true );
+    @Test
+    public void givenNullMood_ShouldReturn_Happy() {
+        MoodAnalyzer moodAnalyzer = new MoodAnalyzer(null);
+        String mood;
+        try {
+            ExpectedException exceptionRule = ExpectedException.none();
+            exceptionRule.expect(MoodAnalysisException.class);
+            mood = moodAnalyzer.analyseMood();
+            Assert.assertEquals("HAPPY", mood);
+        } catch (MoodAnalysisException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+     *This Test Case Will Check For
+     * Null Pointer Exception
+     * for empty and null values
+     */
+    @Test
+    public void givenNullMood_ShouldThrow_Exception() {
+        MoodAnalyzer moodAnalyzer = new MoodAnalyzer(null);
+        try {
+            moodAnalyzer.analyseMood(null);
+        } catch (MoodAnalysisException e) {
+            Assert.assertEquals(MoodAnalysisException.exceptionType.ENTERED_NULL, e.type);
+        }
     }
 }
